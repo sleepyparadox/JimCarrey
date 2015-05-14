@@ -9,6 +9,11 @@ namespace JimCarrey
 {
     public class JimBot
     {
+        /// <summary>
+        /// REPLACE THIS WITH YOUR OAUTH LANDING PAGE
+        /// </summary>
+        string _oAuthLandingPage = "https://s3-ap-southeast-2.amazonaws.com/sleepybucket/jimcarrey/OAuthPage.html";
+
         public void Preform()
         {
             _config = Config.Load();
@@ -143,9 +148,8 @@ namespace JimCarrey
             Console.ReadLine();
 
             //Open browser to oAuth flow
-            var redirectUrl = "https://s3-ap-southeast-2.amazonaws.com/sleepybucket/jimcarrey/OAuthPage.html";
             var oauthUrl = string.Format("https://www.facebook.com/dialog/oauth?client_id={0}&scope={1}&response_type=token&redirect_uri={2}",
-                                         "1664657133762257", string.Join(",", _requiredPermissions), Uri.EscapeUriString(redirectUrl));
+                                         "1664657133762257", string.Join(",", _requiredPermissions), Uri.EscapeUriString(_oAuthLandingPage));
             System.Diagnostics.Process.Start(oauthUrl);
 
             Console.WriteLine("Enter token (right+click border/edit/pase)");
