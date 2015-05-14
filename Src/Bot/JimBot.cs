@@ -16,11 +16,11 @@ namespace JimCarrey
 
         public void Preform()
         {
+            Console.WriteLine("Preform");
             _config = Config.Load();
 
             while(true)
             {
-                Console.WriteLine("Started");
 
                 if (string.IsNullOrEmpty(_config.AppId)
                     || string.IsNullOrEmpty(_config.AppSecret))
@@ -38,14 +38,18 @@ namespace JimCarrey
 
                 var post = GetLatestPost("thesamephotoofjimcarreyeveryday");
 
-                if(post != null)
+                if(post != null
+                    && post.id != _lastLikedPost)
                 {
-                    if(post.likes.data.Any(u => u.id == _config.UserId))
+                    //TODO: Not catching existing like in query (to many other people)
+                    //Temp fix using _lastLikedPost
+                    if(post.likes != null && post.likes.data.Any(u => u.id == _config.UserId))
                     {
                         Console.WriteLine("Already liked");
                     }
                     else if (LikePost(post, _config.UserToken))
                     {
+                        _lastLikedPost = post.id;
                         Console.WriteLine("Liked todays photo!");
                         SendNotification("Liked Jim Carrey's at " + DateTime.UtcNow);
                     }
@@ -57,7 +61,7 @@ namespace JimCarrey
 
         FB.Post GetLatestPost(string page)
         {
-            var postUrl = string.Format("{0}{1}/feed?limit=1&access_token={2}",
+            var postUrl = string.Format("{0}{1}/posts?limit=1&access_token={2}",
                                         OpenGraph.BaseUrl, page, _config.UserToken);
             var result = OpenGraph.RequestEdge<FB.Post>(OpenGraph.Get, postUrl);
 
@@ -103,8 +107,8 @@ namespace JimCarrey
             else
             {
                 //Check every 6 minutes
-                const int thirtyMinutes = 6 * 60 * 1000;
-                Thread.Sleep(thirtyMinutes);
+                const int sixMinutes = 6 * 60 * 1000;
+                Thread.Sleep(sixMinutes);
             }
         }
 
@@ -200,6 +204,7 @@ namespace JimCarrey
             return true;
         }
 
+        string _lastLikedPost;
         string[] _requiredPermissions = new[] { "user_likes", "publish_actions", "manage_notifications" };
         Config _config;
     }

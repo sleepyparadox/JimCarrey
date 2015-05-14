@@ -66,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Newtonsoft.Json.dll" />
-    <Content Include="WebPage%28Linked%29\OAuthPage.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

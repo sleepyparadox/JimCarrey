@@ -10,6 +10,7 @@ namespace JimCarrey.FB
     {
         public string id { get; set; }
         public string type { get; set; }
+        public string story { get; set; }
         public Edge<User> likes { get; set; }
     }
 }
